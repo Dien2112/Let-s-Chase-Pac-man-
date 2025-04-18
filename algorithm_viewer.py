@@ -1,0 +1,95 @@
+import pygame
+
+# Constants
+TILE_SIZE = 40
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 640
+FONT_NAME = "freesansbold.ttf"
+
+class AlgorithmViewer:
+    def __init__(self, screen):
+        self.screen = screen
+        self.font = pygame.font.Font(FONT_NAME, 24)
+        
+        # Load map files
+        self.maps = [f"map{i}.txt" for i in range(1, 4)]  # Adjust this if you have more maps
+        self.selected_map_idx = 0
+        self.game_map = self.load_map(self.maps[self.selected_map_idx])
+        
+        # Load sprites
+        self.load_sprites()
+
+    def load_map(self, map_file):
+        """Loads the map from a text file."""
+        with open(map_file, 'r') as file:
+            map = [line.strip().split() for line in file]
+            for i in range(len(map)):
+                for j in range(len(map[i])):
+                    if map[i][j] != '0':
+                        map[i][j] = '1'
+
+            return map
+
+    def load_sprites(self):
+        """Loads all the sprite images for the map entities."""
+        self.sprites = {
+            '0': pygame.image.load("assets/wall.png").convert_alpha(),
+            '1': pygame.image.load("assets/path.png").convert_alpha(),
+            '2': pygame.image.load("assets/pacman.png").convert_alpha(),
+            'a': pygame.image.load("assets/ghost_red.png").convert_alpha(),
+            'b': pygame.image.load("assets/ghost_blue.png").convert_alpha(),
+            'c': pygame.image.load("assets/ghost_pink.png").convert_alpha(),
+            'd': pygame.image.load("assets/ghost_orange.png").convert_alpha()
+        }
+
+    def draw(self):
+        """Draws the map and header to the screen."""
+        # Draw header
+        header_text = self.font.render("Choose the map", True, (255, 255, 255))
+        self.screen.blit(header_text, (SCREEN_WIDTH // 2 - header_text.get_width() // 2, 10))
+
+        # Draw map grid
+        for row_idx, row in enumerate(self.game_map):
+            for col_idx, cell in enumerate(row):
+                x = col_idx * TILE_SIZE
+                y = (row_idx + 1) * TILE_SIZE  # Offset by one row for header space
+                if cell in self.sprites:
+                    image = pygame.transform.scale(self.sprites[cell], (TILE_SIZE, TILE_SIZE))
+                    self.screen.blit(image, (x, y))
+
+    def handle_event(self, event):
+        """Handles key events."""
+        if event.type == pygame.QUIT:
+            return "quit", None
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                # Switch to the next map
+                self.selected_map_idx = (self.selected_map_idx + 1) % len(self.maps)
+                self.game_map = self.load_map(self.maps[self.selected_map_idx])
+            elif event.key == pygame.K_LEFT:
+                # Switch to the previous map
+                self.selected_map_idx = (self.selected_map_idx - 1) % len(self.maps)
+                self.game_map = self.load_map(self.maps[self.selected_map_idx])
+            elif event.key == pygame.K_RETURN:
+                # Return selected map index and map when Enter is pressed
+                return "choose_map", self.selected_map_idx
+            elif event.key == pygame.K_ESCAPE:
+                return "quit", None
+
+        return "continue", None
+
+    def get_selected_map(self):
+        """Returns the current selected map."""
+        return self.game_map
+
+    def get_sprites(self):
+        """Returns the dictionary of sprites."""
+        return self.sprites
+    def reset(self):
+        """Resets the viewer to the initial state."""
+        self.selected_map_idx = 0
+        self.game_map = self.load_map(self.maps[self.selected_map_idx])
+    def update(self):
+        """Updates the screen with the current map."""
+        self.screen.fill((0, 0, 0)) 
