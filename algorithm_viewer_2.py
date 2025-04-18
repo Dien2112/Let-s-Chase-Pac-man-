@@ -30,6 +30,9 @@ class AlgorithmViewer2:
 
     def draw(self):
         self.screen.fill((0, 0, 0)) 
+        for row in self.game_map:
+            print('.'.join(row))
+
         # Draw header
         header_text = self.font.render("Choose Pac-Man Position", True, (255, 255, 255))
         self.screen.blit(header_text, (SCREEN_WIDTH // 2 - header_text.get_width() // 2, 10))
@@ -39,8 +42,10 @@ class AlgorithmViewer2:
             for col_idx, cell in enumerate(row):
                 x = col_idx * TILE_SIZE
                 y = (row_idx + 1) * TILE_SIZE  # Offset by one row for header space
-                if cell in self.sprites:
-                    self.screen.blit(pygame.transform.scale(self.sprites[cell], (TILE_SIZE, TILE_SIZE)), (x, y))
+                if cell == '0':
+                    self.screen.blit(pygame.transform.scale(self.sprites['0'], (TILE_SIZE, TILE_SIZE)), (x, y))
+                else:
+                    self.screen.blit(pygame.transform.scale(self.sprites['1'], (TILE_SIZE, TILE_SIZE)), (x, y))
 
         # Draw Pac-Man at the current position
         pac_x = self.pacman_pos[1] * TILE_SIZE
@@ -72,8 +77,8 @@ class AlgorithmViewer2:
             elif event.key == pygame.K_ESCAPE:
                 return "quit", None
         
-        self.screen.fill((0, 0, 0)) 
-        self.draw()
+            self.screen.fill((0, 0, 0)) 
+            self.draw()
         return "continue", None  # <== Make sure this is always the default return
 
     def get_pacman_position(self):

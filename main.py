@@ -58,7 +58,6 @@ def main():
                     selected_map = algorithm_viewer.maps[data]
                     with open(selected_map, 'r') as file:
                         game_map = [line.strip().split() for line in file]
-                    print(type(game_map))                    # Create new viewer for stage 2
                     algorithm_viewer_2 = AlgorithmViewer2(screen, game_map)
                     algorithm_viewer_2.draw()
                     game_state = "watch_2"

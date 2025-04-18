@@ -25,9 +25,6 @@ class AlgorithmViewer3:
                     self.game_map[i][j] = '1'
                 if i == self.pacman_pos[0] and j == self.pacman_pos[1]:
                     self.game_map[i][j] = '2'
-                if i == self.ghost_position[0] and j == self.ghost_position[1]:
-                    self.game_map[i][j] = self.ghost_type
-
         self.sprites = {
             '0': pygame.image.load("assets/wall.png").convert_alpha(),
             '1': pygame.image.load("assets/path.png").convert_alpha(),
@@ -50,6 +47,8 @@ class AlgorithmViewer3:
                 y = (row_idx + 1) * TILE_SIZE  # Offset by one row for header space
                 if cell in self.sprites:
                     self.screen.blit(pygame.transform.scale(self.sprites[cell], (TILE_SIZE, TILE_SIZE)), (x, y))
+                if col_idx == self.ghost_position[1] and row_idx == self.ghost_position[0]:
+                   self.screen.blit(pygame.transform.scale(self.sprites[self.ghost_type], (TILE_SIZE, TILE_SIZE)), (x, y))
 
         # Draw the ghost's path
         if hasattr(self, 'ghost_path'):
@@ -102,4 +101,13 @@ class AlgorithmViewer3:
                 self.ghost_path = path
                 self.performance = record
                 self.ghost_type = 'd'
+            elif event.key == pygame.K_UP and self.ghost_position[0] > 0 and self.game_map[self.ghost_position[0] - 1][self.ghost_position[1]] == '1':
+                self.ghost_position = (self.ghost_position[0] - 1, self.ghost_position[1])
+            elif event.key == pygame.K_DOWN and self.ghost_position[0] < len(self.game_map) - 1 and self.game_map[self.ghost_position[0] + 1][self.ghost_position[1]] == '1':
+                self.ghost_position = (self.ghost_position[0] + 1, self.ghost_position[1])
+            elif event.key == pygame.K_LEFT and self.ghost_position[1] > 0 and self.game_map[self.ghost_position[0]][self.ghost_position[1] - 1] == '1':
+                self.ghost_position = (self.ghost_position[0], self.ghost_position[1] - 1)
+            elif event.key == pygame.K_RIGHT and self.ghost_position[1] < len(self.game_map[0]) - 1 and self.game_map[self.ghost_position[0]][self.ghost_position[1] + 1] == '1':
+                self.ghost_position = (self.ghost_position[0], self.ghost_position[1] + 1)
+            
             self.draw()
