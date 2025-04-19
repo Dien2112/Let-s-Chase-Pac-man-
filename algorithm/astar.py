@@ -47,26 +47,20 @@ def astar(start, goal, game_map):
     record.stop()
     
     return path, record
+def start_astar_thread_loop(game_map, game_instance):
+    ghost_pos = find_index(game_map, 'd')  # Find the ghost's current position
+    pacman_pos = find_index(game_map, '2')  # Find Pac-Man's current position
+    if ghost_pos and pacman_pos:
+        path, record = astar(ghost_pos, pacman_pos, game_map)
+        # If path has more than 1 step (move to next step)
+        if len(path) > 1:
+            next_step = path[1]  # Get the next position in the path (not the current position)
+            if isinstance(next_step, PerformanceRecord):
+                next_step = (next_step.x, next_step.y)  # Extract the coordinates from the PerformanceRecord
+            swap(game_map, ghost_pos, next_step)  # Swap the ghost's position on the map
+            game_instance.check_collision()  # Check if the move caused any collision
 
 def start_astar_thread(game_map, game_instance):
     while game_instance.running:
-        ghost_pos = find_index(game_map, 'd')  # Find the ghost's current position
-        pacman_pos = find_index(game_map, '2')  # Find Pac-Man's current position
-
-        if ghost_pos and pacman_pos:
-            # Call A* to get the path and performance record
-            path, record = astar(ghost_pos, pacman_pos, game_map)
-
-            # If path has more than 1 step (move to next step)
-            if len(path) > 1:
-                next_step = path[1]  # Get the next position in the path (not the current position)
-
-                # If `next_step` is a tuple (coordinates), no need to extract from PerformanceRecord
-                # Otherwise, you would extract coordinates if it's a PerformanceRecord object (if it were used)
-                if isinstance(next_step, PerformanceRecord):
-                    next_step = (next_step.x, next_step.y)  # Extract the coordinates from the PerformanceRecord
-
-                swap(game_map, ghost_pos, next_step)  # Swap the ghost's position on the map
-                game_instance.check_collision()  # Check if the move caused any collision
-
+        start_astar_thread_loop(game_map, game_instance)
         time.sleep(0.6)  # Delay between moves (to simulate ghost movement)

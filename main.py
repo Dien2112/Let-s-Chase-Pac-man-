@@ -42,6 +42,7 @@ def main():
             if game_state == "menu":
                 selected_mode = menu.handle_event(event)
                 if selected_mode == "play":
+                    print("Check")
                     game_state = "game"
                     game.reset()
                 elif selected_mode == "watch":
@@ -51,7 +52,6 @@ def main():
                 game.handle_event(event)
             elif game_state == "watch":
                 result, data = algorithm_viewer.handle_event(event)
-                print(result, data)
                 if result == "choose_map":
                     # Load map based on selected index
                     selected_map = algorithm_viewer.maps[data]
@@ -62,11 +62,9 @@ def main():
                     game_state = "watch_2"
             elif game_state == "watch_2":
                 result, data = algorithm_viewer_2.handle_event(event)
-                print(result, data)
+              
                 if result == "choose_pacman_pos":
-                    # Proceed to stage 3 with selected algorithm
                     algorithm_viewer_3 = AlgorithmViewer3(screen, game_map, data)
-                    print("Algorithm selected:", data)
                     algorithm_viewer_3.draw()
                     game_state = "watch_3"
 

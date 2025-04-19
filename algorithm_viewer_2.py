@@ -1,5 +1,6 @@
 import pygame
-
+from utils import complex_map_to_map
+from draw_complex_map import draw_complex_map, redraw_demo
 # Constants
 TILE_SIZE = 40
 SCREEN_WIDTH = 800
@@ -9,7 +10,8 @@ FONT_NAME = "freesansbold.ttf"
 class AlgorithmViewer2:
     def __init__(self, screen, game_map):
         self.screen = screen
-        self.game_map = game_map,
+        self.raw_map = game_map,
+        self.game_map = complex_map_to_map(self.raw_map),
         self.sprites = {
             '0': pygame.image.load("assets/wall.png").convert_alpha(),
             '1': pygame.image.load("assets/path.png").convert_alpha(),
@@ -19,34 +21,23 @@ class AlgorithmViewer2:
             'c': pygame.image.load("assets/ghost_pink.png").convert_alpha(),
             'd': pygame.image.load("assets/ghost_orange.png").convert_alpha()
         }
-        self.font = pygame.font.Font(FONT_NAME, 24)
+        self.font = pygame.font.Font("assets/fonts/PressStart2P.ttf", 18)
         self.game_map = self.game_map[0]  # Unpack the tuple to get the actual map
         for i in range(len(self.game_map)):
             for j in range(len(self.game_map[i])):
                 if self.game_map[i][j] != '0':
                     self.game_map[i][j] = '1'
 
-        self.pacman_pos = (1, 1)
-
-    def draw(self):
-        self.screen.fill((0, 0, 0)) 
-        for row in self.game_map:
-            print('.'.join(row))
-
-        # Draw header
+        self.pacman_pos = (5, 7)
+        self.reset()
+    
+    def reset(self):
         header_text = self.font.render("Choose Pac-Man Position", True, (255, 255, 255))
         self.screen.blit(header_text, (SCREEN_WIDTH // 2 - header_text.get_width() // 2, 10))
+        draw_complex_map(self.screen, self.raw_map)
 
-        # Draw the game map
-        for row_idx, row in enumerate(self.game_map):
-            for col_idx, cell in enumerate(row):
-                x = col_idx * TILE_SIZE
-                y = (row_idx + 1) * TILE_SIZE  # Offset by one row for header space
-                if cell == '0':
-                    self.screen.blit(pygame.transform.scale(self.sprites['0'], (TILE_SIZE, TILE_SIZE)), (x, y))
-                else:
-                    self.screen.blit(pygame.transform.scale(self.sprites['1'], (TILE_SIZE, TILE_SIZE)), (x, y))
-
+    def draw(self):
+        redraw_demo(self.screen, self.raw_map)
         # Draw Pac-Man at the current position
         pac_x = self.pacman_pos[1] * TILE_SIZE
         pac_y = (self.pacman_pos[0] + 1) * TILE_SIZE  # Offset for header
@@ -55,7 +46,6 @@ class AlgorithmViewer2:
 
         # Draw Pac-Man at the calculated position
         self.screen.blit(pygame.transform.scale(self.sprites['2'], (TILE_SIZE, TILE_SIZE)), (pac_x, pac_y))
-        print(type(self.game_map), self.game_map)
         self.game_map[1][1] = '2'
 
     def handle_event(self, event):
@@ -76,6 +66,7 @@ class AlgorithmViewer2:
                 return "choose_pacman_pos", self.pacman_pos
             elif event.key == pygame.K_ESCAPE:
                 return "quit", None
+            print(event.key)
         
             self.screen.fill((0, 0, 0)) 
             self.draw()

@@ -4,7 +4,6 @@ BASETILEWIDTH = 16
 BASETILEHEIGHT = 16
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 640
-
 def slice_tileset(image, xrange, yrange, tile_width, tile_height):
     tiles = []
     for y in range(yrange[0], yrange[1], tile_height):
@@ -88,7 +87,29 @@ def tile_dict(char):
     
     return None
 
+def tile_dict_2(char):
+    
+    if char == '.' or char == '+':
+        return pygame.image.load("assets/point.png").convert_alpha()
+    if char == 'p' or char =='P':
+        return pygame.image.load("assets/big_point.png").convert_alpha()
+    if char in "-=n|" or (char >= 'a' and char <= 'e'):
+        return pygame.image.load("assets/blank.png").convert_alpha()
+    
+    return None
+
+def tile_dict_3(char):
+    if char in "-=n|" or (char >= 'a' and char <= 'e'):
+        return pygame.image.load("assets/blank.png").convert_alpha()
+    
+    return None
+
 def draw_complex_map(screen, game_map):
     
     draw_map(screen, game_map, tile_dict)
-    
+
+def redraw(screen, game_map):
+    draw_map(screen, game_map, tile_dict_2)
+
+def redraw_demo(screen, game_map):
+    draw_map(screen, game_map, tile_dict_3)

@@ -37,34 +37,25 @@ def bfs(start, goal, game_map):
     record.path_length = len(path)
     record.stop()
     return path, record
-
-def start_bfs_thread(game_map, game_instance):
-    while game_instance.running:
+def start_bfs_thread_loop(game_map, game_instance):
         ghost_pos = find_index(game_map, 'b')  # Find the ghost's current position
         pacman_pos = find_index(game_map, '2')  # Find Pac-Man's current position
 
         if ghost_pos and pacman_pos:
             # Call BFS to get the path and performance record
             path, record = bfs(ghost_pos, pacman_pos, game_map)
-            print(f"Path found: {path}")
-            
 
             # If path has more than 1 step (move to next step)
             if len(path) > 1:
                 next_step = path[1]  # Get the next position in the path (not the current position)
 
-                print(f"Ghost moved from {ghost_pos} to {next_step}")
                 if isinstance(next_step, PerformanceRecord):
-                    next_step = (next_step.x, next_step.y)  # Extract coordinates from PerformanceRecord
-
-                print(f"Before swap, ghost at {ghost_pos}: {game_map[ghost_pos[0]][ghost_pos[1]]}")
-                print(f"Before swap, next step at {next_step}: {game_map[next_step[0]][next_step[1]]}")
+                    next_step = (next_step.x, next_step.y)  
 
                 swap(game_map, ghost_pos, next_step)
 
-                print(f"After swap, ghost at {ghost_pos}: {game_map[ghost_pos[0]][ghost_pos[1]]}")
-                print(f"After swap, next step at {next_step}: {game_map[next_step[0]][next_step[1]]}")
-                game_instance.check_collision()  # Check for collision after moving
-
+def start_bfs_thread(game_map, game_instance):
+    while game_instance.running:
+        start_bfs_thread_loop(game_map, game_instance)
         time.sleep(0.6)  # Delay between moves (to simulate ghost movement)
 
