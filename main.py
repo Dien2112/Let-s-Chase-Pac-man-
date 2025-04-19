@@ -42,7 +42,6 @@ def main():
             if game_state == "menu":
                 selected_mode = menu.handle_event(event)
                 if selected_mode == "play":
-                    print("Starting game...")
                     game_state = "game"
                     game.reset()
                 elif selected_mode == "watch":
@@ -62,7 +61,6 @@ def main():
                     algorithm_viewer_2.draw()
                     game_state = "watch_2"
             elif game_state == "watch_2":
-                print("watch_2")
                 result, data = algorithm_viewer_2.handle_event(event)
                 print(result, data)
                 if result == "choose_pacman_pos":
@@ -70,11 +68,9 @@ def main():
                     algorithm_viewer_3 = AlgorithmViewer3(screen, game_map, data)
                     print("Algorithm selected:", data)
                     algorithm_viewer_3.draw()
-                    print("Stage 3")
                     game_state = "watch_3"
 
             elif game_state == "watch_3":
-                print("watch_3")
                 algorithm_viewer_3.handle_event(event)
 
             elif result == "quit":

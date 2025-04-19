@@ -7,16 +7,13 @@ from algorithm.dfs import start_dfs_thread
 from algorithm.bfs import start_bfs_thread
 from algorithm.ucs import start_ucs_thread
 from algorithm.astar import start_astar_thread
-from utils import find_index, swap
+from draw_complex_map import draw_complex_map
+from utils import find_index, swap, complex_map_to_map
 
-TILE_SIZE = 40
+TILE_SIZE = 16
 FONT_NAME = "freesansbold.ttf"
 
-with open('map1.txt', 'r') as file:
-    game_map = [line.strip().split() for line in file]
 
-ROW_COUNT = len(game_map)
-COL_COUNT = len(game_map[0])
 SPRITE_MAP = {
     '0': "assets/wall.png",
     '1': "assets/path.png",
@@ -30,25 +27,33 @@ SPRITE_MAP = {
 class Game:
     def __init__(self, screen):
         self.screen = screen
-        self.original_map = [row[:] for row in game_map]
-        self.map = [row[:] for row in game_map]
+        with open('maze1.txt', 'r') as file:
+            self.raw_map = [line.strip().split() for line in file if line.strip()]  
+        self.map = complex_map_to_map(self.raw_map)
         self.sprites = {}
         self.player_pos = find_index(self.map, '2')
         self.return_to_menu = False
         self.running = True
         self.lose = False
+        self.point = 0
         self.font = pygame.font.Font(FONT_NAME, 48)
         self.load_sprites()
+        self.ROW_COUNT = len(self.map)
+        self.COL_COUNT = len(self.map[0])
 
     def load_sprites(self):
         for key, path in SPRITE_MAP.items():
             image = pygame.image.load(path).convert_alpha()
             self.sprites[key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
+    def is_valid_move(self, pos):
+        return pos[0] >= 0 and pos[1] >=0 and pos[0]< self.ROW_COUNT and pos[1]< self.COL_COUNT and self.map[pos[0]][pos[1]] in ['1', '2']
 
     def draw(self):
+        self.screen.fill((0, 0, 0))
+        draw_complex_map(self.screen, self.raw_map)
         for row_idx, row in enumerate(self.map):
             for col_idx, cell in enumerate(row):
-                if cell in self.sprites:
+                if cell in self.sprites and ((cell >='a' and cell <= 'd') or (cell=='2')) :
                     x = col_idx * TILE_SIZE
                     y = row_idx * TILE_SIZE
                     self.screen.blit(self.sprites[cell], (x, y))
@@ -73,11 +78,24 @@ class Game:
                 if self.is_valid_move(new_pos):
                     swap(self.map, self.player_pos, new_pos)
                     self.player_pos = new_pos
-                    self.check_collision()
+                    if self.raw_map[new_pos[0]][new_pos[1]] in ['+', '.']:
+                        self.raw_map[new_pos[0]][new_pos[1]] = '-'
+                        self.point += 1000
+                        self.update_score_display(self.screen)
 
-    def is_valid_move(self, pos):
-        (r, c) = pos
-        return 0 <= r < ROW_COUNT and 0 <= c < COL_COUNT and self.map[r][c] == '1'
+                    if self.raw_map[new_pos[0]][new_pos[1]] == 'P':
+                        self.raw_map[new_pos[0]][new_pos[1]] = '-'
+                        self.point += 5000
+                        self.update_score_display(self.screen)
+  
+                    self.check_collision()
+    def update_score_display(self, screen):
+        font = pygame.font.Font("assets/fonts/PressStart2P.ttf", 18)
+        pygame.draw.rect(screen, (0, 0, 0), (550, 0, 180, 50))  # Clear the score area
+        text = font.render(f"Score: {self.point}", True, (255, 255, 0))
+        screen.blit(text, (630, 10))
+        pygame.display.update((550, 0, 180, 50))  # Only update that part of screen
+
 
     def check_collision(self):
         r, c = self.player_pos
@@ -87,11 +105,10 @@ class Game:
 
     def display_lose_message(self):
         text = self.font.render("YOU LOSE", True, (255, 0, 0))
-        rect = text.get_rect(center=(COL_COUNT * TILE_SIZE // 2, ROW_COUNT * TILE_SIZE // 2))
+        rect = text.get_rect(center=(self.COL_COUNT * TILE_SIZE // 2, self.ROW_COUNT * TILE_SIZE // 2))
         self.screen.blit(text, rect)
 
     def reset(self):
-        self.map = [row[:] for row in self.original_map]
         self.player_pos = find_index(self.map, '2')
         self.return_to_menu = False
         self.running = True
@@ -102,7 +119,6 @@ class Game:
         self.running = False
 
     def start_threads(self):
-        print("Starting algorithm threads...")
         threading.Thread(target=start_dfs_thread, args=(self.map, self), daemon=True).start()
         threading.Thread(target=start_bfs_thread, args=(self.map, self), daemon=True).start()
         threading.Thread(target=start_ucs_thread, args=(self.map, self), daemon=True).start()

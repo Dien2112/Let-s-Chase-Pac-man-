@@ -35,3 +35,18 @@ def get_neighbors(pos, game_map):
                 neighbors.append((r, c))
     
     return neighbors
+def complex_map_to_map(map):
+    converted_map = []
+    for row in map:
+        new_row = []
+        for cell in row:
+            if cell == 'X' or (cell >='0' and cell <='9'):  # Wall-like characters
+                new_row.append('0')
+            elif cell == 'e':
+                new_row.append('2')
+            elif cell in ['a', 'b', 'c', 'd']:  # Ghosts
+                new_row.append(cell)
+            else:
+                new_row.append('1')  # fallback: assume walkable
+        converted_map.append(new_row)
+    return converted_map
