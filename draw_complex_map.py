@@ -5,6 +5,19 @@ BASETILEHEIGHT = 16
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 640
 tileset_img = None
+
+def load_asset():
+    load_assets = {
+        'tileset_img': pygame.image.load("spritesheet.png").convert_alpha(),
+        'point_img' : pygame.image.load("assets/point.png").convert_alpha(),
+        'big_point_img' : pygame.image.load("assets/big_point.png").convert_alpha(),
+        'blank_img' : pygame.image.load("assets/blank.png").convert_alpha(),
+    }
+    return load_assets
+
+    
+
+
 def slice_tileset(image, xrange, yrange, tile_width, tile_height):
     tiles = []
     for y in range(yrange[0], yrange[1], tile_height):
@@ -20,13 +33,10 @@ def rotate_tile(tile, angle):
     return pygame.transform.rotate(tile, angle)
 
 def draw_map(screen, map_data, tile_dict, tile_size=16):
-    global tileset_img
-    if tileset_img ==None:
-        tileset_img = pygame.image.load("spritesheet.png").convert_alpha()
-
+    load_assets = load_asset()
     for y, row in enumerate(map_data):
         for x, cell in enumerate(row):
-            tile = tile_dict(cell)
+            tile = tile_dict(cell, load_assets)
             #print(cell, tile)
             if tile:
                 if cell in ['7','8']:
@@ -78,34 +88,48 @@ def draw_map(screen, map_data, tile_dict, tile_size=16):
                 tile = pygame.transform.scale(tile, (tile_size, tile_size))
                 screen.blit(tile, (x * tile_size, y * tile_size))
 
-def tile_dict(char):
-    
+def redraw_map(screen, map_data, tile_dict, tile_size=16):
+    load_assets = load_asset()
+
+    for y, row in enumerate(map_data):
+        for x, cell in enumerate(row):
+            tile = tile_dict(cell, load_assets)
+            #print(cell, tile)
+            if tile:
+                tile = pygame.transform.scale(tile, (tile_size, tile_size))
+                screen.blit(tile, (x * tile_size, y * tile_size))
+    print("Yeah")
+
+def tile_dict(char, load_assets):
+    global tileset_img
+    if tileset_img ==None:
+        tileset_img = load_assets['tileset_img']
     if char >= '0' and char <= '9':
         tiles = slice_tileset(tileset_img,(176 + 16, 352), (0,  16), 16, 16)  # or 8x8, 32x32 depending on your asset
         return tiles[int(char)]
     if char == '.' or char == '+':
-        return pygame.image.load("assets/point.png").convert_alpha()
+        return load_assets['point_img']
     if char == 'p' or char =='P':
-        return pygame.image.load("assets/big_point.png").convert_alpha()
+        return load_assets['big_point_img']
     
     return None
 
-def tile_dict_2(char):
+def tile_dict_2(char, load_assets):
     
     if char == '.' or char == '+':
-        return pygame.image.load("assets/point.png").convert_alpha()
+        return load_assets['point_img']
     if char == 'p' or char =='P':
-        return pygame.image.load("assets/big_point.png").convert_alpha()
+        return load_assets['big_point_img']
     if char in "-=n|" or (char >= 'a' and char <= 'e'):
-        return pygame.image.load("assets/blank.png").convert_alpha()
+        return load_assets['blank_img']
     
     return None
 
-def tile_dict_3(char):
+def tile_dict_3(char, load_assets):
     if char in ".+Pp|n-abcde=":
-        return pygame.image.load("assets/blank.png").convert_alpha()
+        return load_assets['blank_img']
     if char != 'X' and char <'0' and char > '9':
-        return pygame.image.load("assets/blank.png").convert_alpha()
+        return load_assets['blank_img']
     
     return None
 
@@ -114,7 +138,7 @@ def draw_complex_map(screen, game_map):
     draw_map(screen, game_map, tile_dict)
 
 def redraw(screen, game_map):
-    draw_map(screen, game_map, tile_dict_2)
+    redraw_map(screen, game_map, tile_dict_2)
 
 def redraw_demo(screen, game_map):
-    draw_map(screen, game_map, tile_dict_3)
+    redraw_map(screen, game_map, tile_dict_3)

@@ -24,6 +24,12 @@ SPRITE_MAP = {
     'd': "assets/ghost_orange.png"
 }
 
+def draw_thread(self):
+        while self.running:
+            print("drawing!")
+            self.draw()
+            print("Drawed")
+            time.sleep(0.2)
 def main_thread(self):
         while self.running:
             print(self.running)
@@ -35,7 +41,7 @@ def main_thread(self):
 class Game:
     def __init__(self, screen):
         self.screen = screen
-        with open('maze2.txt', 'r') as file:
+        with open('maze1.txt', 'r') as file:
             self.raw_map = [line.strip().split() for line in file if line.strip()]  
         self.map = complex_map_to_map(self.raw_map)
         self.sprites = {}
@@ -57,14 +63,16 @@ class Game:
         return pos[0] >= 0 and pos[1] >=0 and pos[0]< self.ROW_COUNT and pos[1]< self.COL_COUNT and self.map[pos[0]][pos[1]] in ['1', '2']
 
     def draw(self):
+        print("Drawing")
         redraw(self.screen, self.raw_map)
+        print("Drawed")
         for row_idx, row in enumerate(self.map):
             for col_idx, cell in enumerate(row):
                 if (cell >='a' and cell <= 'd') or (cell=='2') :
                     x = col_idx * TILE_SIZE
                     y = row_idx * TILE_SIZE
                     self.screen.blit(self.sprites[cell], (x, y))
-
+        print("Finish")
         if self.lose:
             self.display_lose_message()
 
@@ -98,6 +106,8 @@ class Game:
   
                     self.check_collision()
     def update_score_display(self, screen):
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(630, 10, 300, 200))
+
         self.font = pygame.font.Font("assets/fonts/PressStart2P.ttf", 18)
         pygame.draw.rect(screen, (0, 0, 0), (550, 0, 180, 50))  # Clear the score area
         text = self.font.render(f"Score: {self.point}", True, (255, 255, 0))
@@ -129,11 +139,13 @@ class Game:
     def cleanup(self):
         self.running = False
 
+    
 
     def start_threads(self):
-        threading.Thread(target=start_dfs_thread, args=(self.map, self), daemon=True).start()
-        threading.Thread(target=start_bfs_thread, args=(self.map, self), daemon=True).start()
-        threading.Thread(target=start_ucs_thread, args=(self.map, self), daemon=True).start()
-        threading.Thread(target=start_astar_thread, args=(self.map, self), daemon=True).start()
+        threading.Thread(target=start_dfs_thread, args=(self.map, self,), daemon=True).start()
+        threading.Thread(target=start_bfs_thread, args=(self.map, self,), daemon=True).start()
+        threading.Thread(target=start_ucs_thread, args=(self.map, self,), daemon=True).start()
+        threading.Thread(target=start_astar_thread, args=(self.map, self,), daemon=True).start()
+        #threading.Thread(target=draw_thread, args=(self,),).start()
         #self.game_thread = threading.Thread(target=main_thread, args = (self,) )
         #self.game_thread.start()

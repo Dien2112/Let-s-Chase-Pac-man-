@@ -65,8 +65,11 @@ def start_dfs_thread_loop(game_map, game_instance):
                 next_step = (next_step.x, next_step.y)  # Extract coordinates from PerformanceRecord
             # Now `next_step` is guaranteed to be a tuple (row, col), and can be used with swap
             swap(game_map, ghost_pos, next_step)  # Swap the ghost's position on the map
+            
             game_instance.check_collision()  # Check if the move caused any collision
 def start_dfs_thread(game_map, game_instance):
     while game_instance.running:
-        start_dfs_thread_loop(game_map, game_instance);
+        print("Moved")
+        start_dfs_thread_loop(game_map, game_instance)
+        print("Moving")
         time.sleep(0.6)  # Delay between moves (to simulate ghost movement)
