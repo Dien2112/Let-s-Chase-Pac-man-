@@ -25,9 +25,6 @@ class AlgorithmViewer:
         with open(map_file, 'r') as file:
             self.raw_map = [line.strip().split() for line in file]
         self.draw()
-        print(map_file)
-        for row in self.raw_map:
-            print(", ".join(row))
         self.map = complex_map_to_map(self.raw_map)
         for i in range(len(self.map)):
             for j in range(len(self.map[i])):
@@ -74,8 +71,6 @@ class AlgorithmViewer:
                 return "choose_map", self.selected_map_idx
             elif event.key == pygame.K_ESCAPE:
                 return "quit", None
-            print("Changing")
-
         return "continue", None
 
     def get_selected_map(self):

@@ -21,7 +21,6 @@ class AlgorithmViewer2:
         }
         self.font = pygame.font.Font("assets/fonts/PressStart2P.ttf", 18)
         self.raw_map = game_map # Unpack the tuple to get the actual map
-        print("RAW", self.raw_map)
         self.game_map = complex_map_to_map(self.raw_map)
         for i in range(len(self.raw_map)):
             for j in range(len(self.raw_map[i])):
@@ -44,7 +43,6 @@ class AlgorithmViewer2:
         # Draw Pac-Man at the current position
         pac_x = self.pacman_pos[1] * TILE_SIZE
         pac_y = (self.pacman_pos[0]) * TILE_SIZE  # Offset for header
-        print(self.raw_map[self.pacman_pos[0]][self.pacman_pos[1]])
         self.screen.blit(pygame.transform.scale(self.sprites['2'], (TILE_SIZE, TILE_SIZE)), (pac_x, pac_y))
 
     def handle_event(self, event):
@@ -65,8 +63,6 @@ class AlgorithmViewer2:
                 return "choose_pacman_pos", self.pacman_pos
             elif event.key == pygame.K_ESCAPE:
                 return "quit", None
-            print(event.key)
-            print("Come to this")
             self.draw()
         return "continue", None  # <== Make sure this is always the default return
 
