@@ -36,6 +36,7 @@ def get_neighbors(pos, game_map):
     
     return neighbors
 def complex_map_to_map(map):
+    print("Map is:", map)
     converted_map = []
     for row in map:
         new_row = []
@@ -49,4 +50,5 @@ def complex_map_to_map(map):
             else:
                 new_row.append('1')  # fallback: assume walkable
         converted_map.append(new_row)
+        print("New row: ", new_row)
     return converted_map

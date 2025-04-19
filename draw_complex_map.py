@@ -4,6 +4,7 @@ BASETILEWIDTH = 16
 BASETILEHEIGHT = 16
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 640
+tileset_img = None
 def slice_tileset(image, xrange, yrange, tile_width, tile_height):
     tiles = []
     for y in range(yrange[0], yrange[1], tile_height):
@@ -19,7 +20,10 @@ def rotate_tile(tile, angle):
     return pygame.transform.rotate(tile, angle)
 
 def draw_map(screen, map_data, tile_dict, tile_size=16):
-    
+    global tileset_img
+    if tileset_img ==None:
+        tileset_img = pygame.image.load("spritesheet.png").convert_alpha()
+
     for y, row in enumerate(map_data):
         for x, cell in enumerate(row):
             tile = tile_dict(cell)
@@ -76,9 +80,8 @@ def draw_map(screen, map_data, tile_dict, tile_size=16):
 
 def tile_dict(char):
     
-    tileset_img = pygame.image.load("spritesheet.png").convert_alpha()
-    tiles = slice_tileset(tileset_img,(176 + 16, 352), (0,  16), 16, 16)  # or 8x8, 32x32 depending on your asset
     if char >= '0' and char <= '9':
+        tiles = slice_tileset(tileset_img,(176 + 16, 352), (0,  16), 16, 16)  # or 8x8, 32x32 depending on your asset
         return tiles[int(char)]
     if char == '.' or char == '+':
         return pygame.image.load("assets/point.png").convert_alpha()
@@ -99,7 +102,9 @@ def tile_dict_2(char):
     return None
 
 def tile_dict_3(char):
-    if char in "-=n|" or (char >= 'a' and char <= 'e'):
+    if char in ".+Pp|n-abcde=":
+        return pygame.image.load("assets/blank.png").convert_alpha()
+    if char != 'X' and char <'0' and char > '9':
         return pygame.image.load("assets/blank.png").convert_alpha()
     
     return None

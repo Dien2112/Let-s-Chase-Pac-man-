@@ -35,7 +35,7 @@ def main_thread(self):
 class Game:
     def __init__(self, screen):
         self.screen = screen
-        with open('maze1.txt', 'r') as file:
+        with open('maze2.txt', 'r') as file:
             self.raw_map = [line.strip().split() for line in file if line.strip()]  
         self.map = complex_map_to_map(self.raw_map)
         self.sprites = {}

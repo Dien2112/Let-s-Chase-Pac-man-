@@ -14,7 +14,7 @@ class AlgorithmViewer:
         self.raw_map = None
         self.map = None
         # Load map files
-        self.maps = [f"maze{i}.txt" for i in range(1, 2)]  # Adjust this if you have more maps
+        self.maps = [f"maze{i}.txt" for i in range(1, 3)]  # Adjust this if you have more maps
         self.selected_map_idx = 0
         self.game_map = self.load_map(self.maps[self.selected_map_idx])
         
@@ -25,6 +25,9 @@ class AlgorithmViewer:
         with open(map_file, 'r') as file:
             self.raw_map = [line.strip().split() for line in file]
         self.draw()
+        print(map_file)
+        for row in self.raw_map:
+            print(", ".join(row))
         self.map = complex_map_to_map(self.raw_map)
         for i in range(len(self.map)):
             for j in range(len(self.map[i])):
@@ -60,6 +63,7 @@ class AlgorithmViewer:
             if event.key == pygame.K_RIGHT:
                 # Switch to the next map
                 self.selected_map_idx = (self.selected_map_idx + 1) % len(self.maps)
+                print(self.selected_map_idx, len(self.maps))
                 self.load_map(self.maps[self.selected_map_idx])
             elif event.key == pygame.K_LEFT:
                 # Switch to the previous map
@@ -70,6 +74,7 @@ class AlgorithmViewer:
                 return "choose_map", self.selected_map_idx
             elif event.key == pygame.K_ESCAPE:
                 return "quit", None
+            print("Changing")
 
         return "continue", None
 
