@@ -4,15 +4,6 @@ def find_index(matrix, target):
             return (i, row.index(target))
     return None
 
-def valid_way(matrix, index):
-    result = []
-    for dx, dy in [(-1,0),(1,0),(0,-1),(0,1)]:
-        nx, ny = index[0]+dx, index[1]+dy
-        if 0 <= nx < len(matrix) and 0 <= ny < len(matrix[0]) and matrix[nx][ny] != '0':
-            result.append((nx, ny))
-    return result
-
-
 def swap(table, cell1, cell2):
     # Ensure the positions are tuples like (row, col)
     if isinstance(cell1, tuple) and isinstance(cell2, tuple):

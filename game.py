@@ -63,23 +63,35 @@ class Game:
         return pos[0] >= 0 and pos[1] >=0 and pos[0]< self.ROW_COUNT and pos[1]< self.COL_COUNT and self.map[pos[0]][pos[1]] in ['1', '2']
 
     def draw(self):
-        print("Drawing")
         redraw(self.screen, self.raw_map)
-        print("Drawed")
         for row_idx, row in enumerate(self.map):
             for col_idx, cell in enumerate(row):
                 if (cell >='a' and cell <= 'd') or (cell=='2') :
                     x = col_idx * TILE_SIZE
                     y = row_idx * TILE_SIZE
                     self.screen.blit(self.sprites[cell], (x, y))
-        print("Finish")
+        
         if self.lose:
             self.display_lose_message()
+    def handle_press(self):
+        keys = pygame.key.get_pressed()
+        move = None
 
+        if keys[pygame.K_UP]:
+            move = (-1, 0)
+        elif keys[pygame.K_DOWN]:
+            move = (1, 0)
+        elif keys[pygame.K_LEFT]:
+            move = (0, -1)
+        elif keys[pygame.K_RIGHT]:
+            move = (0, 1)
+        print(move)
+        if move:
+            self.moving(move)
     def handle_event(self, event):
         print(event, event.type)
-        if event.type == pygame.KEYDOWN and not self.lose:
-            move = None
+        if (event.type == pygame.KEYDOWN) and not self.lose:
+            '''move = None
             if event.key == pygame.K_UP:
                 move = (-1, 0)
             elif event.key == pygame.K_DOWN:
@@ -90,21 +102,21 @@ class Game:
                 move = (0, 1)
 
             if move:
-                new_pos = (self.player_pos[0] + move[0], self.player_pos[1] + move[1])
-                if self.is_valid_move(new_pos):
-                    swap(self.map, self.player_pos, new_pos)
-                    self.player_pos = new_pos
-                    if self.raw_map[new_pos[0]][new_pos[1]] in ['+', '.']:
-                        self.raw_map[new_pos[0]][new_pos[1]] = '-'
-                        self.point += 1000
-                        self.update_score_display(self.screen)
-
-                    if self.raw_map[new_pos[0]][new_pos[1]] == 'P':
-                        self.raw_map[new_pos[0]][new_pos[1]] = '-'
-                        self.point += 5000
-                        self.update_score_display(self.screen)
-  
-                    self.check_collision()
+                self.moving(move)'''
+    def moving(self, move):
+        new_pos = (self.player_pos[0] + move[0], self.player_pos[1] + move[1])
+        if self.is_valid_move(new_pos):
+            swap(self.map, self.player_pos, new_pos)
+            self.player_pos = new_pos
+            if self.raw_map[new_pos[0]][new_pos[1]] in ['+', '.']:
+                self.raw_map[new_pos[0]][new_pos[1]] = '-'
+                self.point += 1000
+                self.update_score_display(self.screen)
+            if self.raw_map[new_pos[0]][new_pos[1]] in 'Pp':
+                self.raw_map[new_pos[0]][new_pos[1]] = '-'
+                self.point += 5000
+                self.update_score_display(self.screen)
+            self.check_collision()
     def update_score_display(self, screen):
         pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(630, 10, 300, 200))
 

@@ -85,26 +85,18 @@ def main():
                     game_state = "watch_2"
 
             elif game_state == "watch_2":
-                result, data = algorithm_viewer_2.handle_event(event)
-                if result == "choose_pacman_pos":
-                    algorithm_viewer_3 = AlgorithmViewer3(screen, game_map, data)
-                    algorithm_viewer_3.draw()
-                    game_state = "watch_3"
-
-            elif game_state == "watch_3":
-                algorithm_viewer_3.handle_event(event)
-            # Inside the main while loop:
+                algorithm_viewer_2.handle_event(event)
+               
         if game_state == "menu":
             menu.draw()
         elif game_state == "game":
+            time.sleep(0.1)
+            game.handle_press()
             game.draw()
         elif game_state == "watch":
             algorithm_viewer.draw()
         elif game_state == "watch_2":
             algorithm_viewer_2.draw()
-        elif game_state == "watch_3":
-            algorithm_viewer_3.draw()
-
 
         pygame.display.flip()
         clock.tick(FPS)

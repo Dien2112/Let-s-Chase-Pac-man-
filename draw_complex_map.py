@@ -69,11 +69,11 @@ def draw_map(screen, map_data, tile_dict, tile_size=16):
                     if (cell in ['6']):
                         tile = pygame.transform.rotate(tile, 180)
                 elif cell in ['1','3', '5']:
-                    if map_data[y][x+1] in ['.', '+', '|', 'P','p','n','-']:
+                    if map_data[y][x+1] in '.+|Ppn-abcde':
                         tile = rotate_tile(tile, 90)
-                    elif map_data[y][x-1] in ['.', '+', '|', 'P','p', 'n','-']:
+                    elif map_data[y][x-1] in '.+|Ppn-:abcde':
                         tile = rotate_tile(tile, 270)
-                    elif (map_data[y-1][x] in  ['.', '+', '|', 'P', 'p','n','-']):
+                    elif map_data[y-1][x] in  '.+|Ppn-abcde':
                         tile = rotate_tile(tile, 180)
                     if (cell in ['3','5']):
                         tile = rotate_tile(tile, 180)
@@ -98,7 +98,7 @@ def redraw_map(screen, map_data, tile_dict, tile_size=16):
             if tile:
                 tile = pygame.transform.scale(tile, (tile_size, tile_size))
                 screen.blit(tile, (x * tile_size, y * tile_size))
-    print("Yeah")
+    
 
 def tile_dict(char, load_assets):
     global tileset_img
@@ -142,3 +142,5 @@ def redraw(screen, game_map):
 
 def redraw_demo(screen, game_map):
     redraw_map(screen, game_map, tile_dict_3)
+
+    
