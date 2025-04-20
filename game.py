@@ -42,10 +42,10 @@ class Game:
     def __init__(self, screen):
         self.screen = screen
         self.current_map = 1
-        with open(f'maze{self.current_map}.txt', 'r') as file:
+        with open(f'mazes/maze{self.current_map}.txt', 'r') as file:
             self.raw_map = [line.strip().split() for line in file if line.strip()]  
         self.map = complex_map_to_map(self.raw_map)
-        self.count = sum(row.count(c) for row in self.raw_map for c in ['+', 'P', 'p'])
+        self.count = sum(row.count(c) for row in self.raw_map for c in ['+', '.',  'P', 'p'])
 
         self.sprites = {}
         self.player_pos = find_index(self.map, '2')
@@ -67,7 +67,7 @@ class Game:
         return pos[0] >= 0 and pos[1] >=0 and pos[0]< self.ROW_COUNT and pos[1]< self.COL_COUNT and self.map[pos[0]][pos[1]] in ['1', '2']
 
     def draw(self):
-        if self.is_pause:
+        if self.is_pause or not self.running:
             return
         redraw(self.screen, self.raw_map)
         for row_idx, row in enumerate(self.map):
@@ -203,7 +203,7 @@ class Game:
             pygame.display.flip()
 
     def reinit(self):
-        with open(f'maze{self.current_map}.txt', 'r') as file:
+        with open(f'mazes/maze{self.current_map}.txt', 'r') as file:
             self.raw_map = [line.strip().split() for line in file if line.strip()]  
         self.count = sum(row.count(c) for row in self.raw_map for c in ['+', '-', 'P', 'p'])
 

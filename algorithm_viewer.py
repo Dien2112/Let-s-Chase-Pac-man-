@@ -14,7 +14,7 @@ class AlgorithmViewer:
         self.raw_map = None
         self.map = None
         # Load map files
-        self.maps = [f"maze{i}.txt" for i in range(1, 5)]  # Adjust this if you have more maps
+        self.maps = [f"mazes/maze{i}.txt" for i in range(1, 5)]  
         self.selected_map_idx = 0
         self.game_map = self.load_map(self.maps[self.selected_map_idx])
         

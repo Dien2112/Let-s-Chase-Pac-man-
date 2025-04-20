@@ -8,7 +8,7 @@ tileset_img = None
 
 def load_asset():
     load_assets = {
-        'tileset_img': pygame.image.load("spritesheet.png").convert_alpha(),
+        'tileset_img': pygame.image.load("assets/spritesheet.png").convert_alpha(),
         'point_img' : pygame.image.load("assets/point.png").convert_alpha(),
         'big_point_img' : pygame.image.load("assets/big_point.png").convert_alpha(),
         'blank_img' : pygame.image.load("assets/blank.png").convert_alpha(),
