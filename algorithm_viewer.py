@@ -51,13 +51,20 @@ class AlgorithmViewer:
         self.screen.blit(header_text, (SCREEN_WIDTH // 2 - header_text.get_width() // 2, 10))
 
         draw_complex_map(self.screen, self.raw_map)
+        
+        self.font = pygame.font.SysFont('Consolas', 16)
+        header_text = self.font.render("Change map: ←→, Choose map: ENTER, Exit: ESC", True, (255, 255, 255))
+        self.screen.blit(header_text, (600, SCREEN_HEIGHT - 20))
+
     def handle_event(self, event):
         """Handles key events."""
         if event.type == pygame.QUIT:
             return "quit", None
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_ESCAPE:
+                return "menu", None
+            elif event.key == pygame.K_RIGHT:
                 # Switch to the next map
                 self.selected_map_idx = (self.selected_map_idx + 1) % len(self.maps)
                 print(self.selected_map_idx, len(self.maps))

@@ -46,8 +46,8 @@ class AlgorithmViewer2:
         self.screen.blit(header_text, (SCREEN_WIDTH // 4 - header_text.get_width() // 2, 10))
         
         self.font = pygame.font.SysFont('Consolas', 16)
-        header_text = self.font.render("Pacman move: WASD, Ghost move: ↑←↓→, Ghost change: 1234", True, (255, 255, 255))
-        self.screen.blit(header_text, (500, SCREEN_HEIGHT - 20))
+        header_text = self.font.render("Pacman move: WASD, Ghost move: ↑←↓→, Ghost change: 1234, Exit: ESC", True, (255, 255, 255))
+        self.screen.blit(header_text, (400, SCREEN_HEIGHT - 20))
         draw_complex_map(self.screen, self.raw_map)
 
     def draw(self):
@@ -92,6 +92,8 @@ class AlgorithmViewer2:
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             type = None
+            if event.key == pygame.K_ESCAPE:
+                return "viewer"
             if event.key == pygame.K_1:
                 # Start DFS algorithm
                 path, record = dfs(self.ghost_pos, self.pacman_pos, self.game_map)

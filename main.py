@@ -5,7 +5,6 @@ from menu import Menu
 from game import Game
 from algorithm_viewer import AlgorithmViewer
 from algorithm_viewer_2 import AlgorithmViewer2
-from algorithm_viewer_3 import AlgorithmViewer3
 
 # Constants
 FPS = 30
@@ -19,7 +18,6 @@ menu = None
 game = None
 algorithm_viewer = None
 algorithm_viewer_2 = None
-algorithm_viewer_3 = None
 game_map = None
 game_state = None
 isRunning = True
@@ -67,13 +65,17 @@ def main():
                 selected_mode = menu.handle_event(event)
                 if selected_mode == "play":
                     game_state = "game"
+                    game.reinit()
                     game.reset()
                 elif selected_mode == "watch":
                     game_state = "watch"
                     algorithm_viewer.reset()
 
             elif game_state == "game":
-                game.handle_event(event)
+                result = game.handle_event(event)
+                if result == "menu":
+                    game_state = "menu"
+                    menu.draw()
 
             elif game_state == "watch":
                 result, data = algorithm_viewer.handle_event(event)
@@ -83,9 +85,15 @@ def main():
                     algorithm_viewer_2 = AlgorithmViewer2(screen, game_map)
                     algorithm_viewer_2.draw()
                     game_state = "watch_2"
+                elif result =="menu":
+                    game_state = "menu"
+                    menu.draw()
 
             elif game_state == "watch_2":
-                algorithm_viewer_2.handle_event(event)
+                result = algorithm_viewer_2.handle_event(event)
+                if result == "viewer":
+                    game_state = "watch"
+                    algorithm_viewer.reset()
                
         if game_state == "menu":
             menu.draw()
