@@ -107,7 +107,7 @@ def tile_dict(char, load_assets):
     if char >= '0' and char <= '9':
         tiles = slice_tileset(tileset_img,(176 + 16, 352), (0,  16), 16, 16)  # or 8x8, 32x32 depending on your asset
         return tiles[int(char)]
-    if char == '.' or char == '+':
+    if char == '.' or char== ',' or char == '+':
         return load_assets['point_img']
     if char == 'p' or char =='P':
         return load_assets['big_point_img']
@@ -116,7 +116,7 @@ def tile_dict(char, load_assets):
 
 def tile_dict_2(char, load_assets):
     
-    if char == '.' or char == '+':
+    if char == '.' or char==',' or char == '+':
         return load_assets['point_img']
     if char == 'p' or char =='P':
         return load_assets['big_point_img']
@@ -126,7 +126,7 @@ def tile_dict_2(char, load_assets):
     return None
 
 def tile_dict_3(char, load_assets):
-    if char in ".+Pp|n-abcde=":
+    if char in ".,+Pp|n-abcde=":
         return load_assets['blank_img']
     if char != 'X' and char <'0' and char > '9':
         return load_assets['blank_img']

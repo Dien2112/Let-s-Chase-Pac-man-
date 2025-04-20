@@ -16,7 +16,7 @@ def astar(start, goal, game_map):
     heapq.heappush(open_set, (0, start))
     g_scores = {start: 0}
     f_scores = {start: heuristic(start, goal)}
-    came_from = {}
+    parent = {}
 
     while open_set:
         _, current = heapq.heappop(open_set)
@@ -30,16 +30,16 @@ def astar(start, goal, game_map):
             if neighbor not in g_scores or tentative_g_score < g_scores[neighbor]:
                 g_scores[neighbor] = tentative_g_score
                 f_scores[neighbor] = tentative_g_score + heuristic(neighbor, goal)
-                came_from[neighbor] = current
+                parent[neighbor] = current
                 heapq.heappush(open_set, (f_scores[neighbor], neighbor))
 
     # Reconstruct the path
     path = []
-    if goal in came_from or start == goal:
+    if goal in parent or start == goal:
         cur = goal
         while cur != start:
             path.append(cur)
-            cur = came_from[cur]
+            cur = parent[cur]
         path.append(start)
         path.reverse()
 

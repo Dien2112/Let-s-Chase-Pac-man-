@@ -69,7 +69,5 @@ def start_dfs_thread_loop(game_map, game_instance):
             game_instance.check_collision()  # Check if the move caused any collision
 def start_dfs_thread(game_map, game_instance):
     while game_instance.running:
-        print("Moved")
         start_dfs_thread_loop(game_map, game_instance)
-        print("Moving")
         time.sleep(0.6)  # Delay between moves (to simulate ghost movement)

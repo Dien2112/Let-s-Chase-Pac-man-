@@ -1,0 +1,15 @@
+X X X X X X X X X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X X X X X X X X X 
+X X X X X 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 X
+X X X X X 1 + , , , , , , , , , , , , + 1 X
+X X X X X 1 . . 0 1 1 1 1 1 1 1 1 0 . . 1 X
+X X X X X 1 . . 1 + . . , , , , + 1 , a 1 X
+X X X X X 1 . . 1 . . 0 1 1 1 , . 1 , b 1 X
+X X X X X 1 . e . . . 1 + . . . . 1 , . 1 X
+X X X X X 1 . . 1 . . 0 1 1 1 , . 1 , c 1 X
+X X X X X 1 . . 1 + . . . . . . + 1 , d 1 X
+X X X X X 1 . . 0 1 1 1 1 1 1 1 1 0 . . 1 X
+X X X X X 1 + . . . . . . . . . . . . + 1 X
+X X X X X 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 X
+X X X X X X X X X X X X X X X X X X X X X X 
